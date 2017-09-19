@@ -23,8 +23,15 @@
                    .range([0, height]);
 
     var xScale = d3.scaleBand()
-                    .domain(myData)
-                    .range([0, width]);
+                  .domain(myData)
+                  .paddingInner(.2)
+                  .paddingOuter(.3)
+                  .range([0, width]);
+
+    var colors = d3.scaleLinear()
+                   //.domain([0, d3.max(myData
+                   .domain([0, myData.length])
+                   .range(['#8e44ad', '#2ecc71'])
 
     d3.select('#chart').append('svg')
                     .attr('width', width)
@@ -33,16 +40,16 @@
                     .selectAll('rect')
                       .data(myData)
                       .enter().append('rect')
-                        .style('fill', '#2ecc71')
+                        //.style('fill', '#2ecc71')
+                        .attr('fill', function(d, i){
+                            return colors(i);
+                        })
                         .attr('width', function(){
                             return xScale.bandwidth();
                         })
                         .attr('height', function(d){
                             return yScale(d);
                         })
-                      //  .attr('x', function(d, i){
-                        //    return xScale(i);
-                        //})
                         .attr('x', function(d){
                             return xScale(d);
                         })
