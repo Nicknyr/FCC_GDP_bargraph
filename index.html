@@ -11,7 +11,7 @@
 
     <script>
 
-    var myData = [100, 125, 320, 440, 500, 240, 320, 729, 50];
+    var myData = [100, 125, 320, 440, 500, 240, 320, 729, 50, 300, 400, 200];
 
     var height = 500;
     var width = 500;
@@ -22,26 +22,9 @@
                    .domain([0, d3.max(myData)])
                    .range([0, height]);
 
-
-                   /* Version 3
-                     vr x = d3.scale.ordinal()
-                    .domain(["a", "b", "c"])
-                    .rangeBands([0, width]);
-                  */
-
-                  /* Version 4
-                     var x = d3.scaleBand()
-                    .domain(["a", "b", "c"])
+    var xScale = d3.scaleBand()
+                    .domain(myData)
                     .range([0, width]);
-
-                  */
-
-    /*var xScale = d3.scaleBand()
-                   .domain([d3.range(0, myData.length)])
-                   .range([0, width])*/
-      var xScale = d3.scaleBand()
-                     .domain(myData)
-                     .range([0, width]);
 
     d3.select('#chart').append('svg')
                     .attr('width', width)
@@ -57,8 +40,11 @@
                         .attr('height', function(d){
                             return yScale(d);
                         })
-                        .attr('x', function(d, i){
-                            return xScale(i);
+                      //  .attr('x', function(d, i){
+                        //    return xScale(i);
+                        //})
+                        .attr('x', function(d){
+                            return xScale(d);
                         })
                         .attr('y', function(d){
                             return height - yScale(d);
