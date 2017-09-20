@@ -21,7 +21,7 @@
 
     //var url = https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/GDP-data.json;
 
-      var myData = [];
+      var money = [];
       var dates = []
       var margin = { top: 0, right: 0, bottom: 30, left: 20 };
       var height = 400 - margin.top - margin.bottom;
@@ -37,61 +37,48 @@
       var xAxisValues;
       var xAxisTicks;
 
-    /*  d3.json("data.json").get(function(error, d){
+       d3.json("data.json").get(function(error, d){
           for (var i = 0; i < d.data.length; i++) {
-            //console.log(d.data[i][0], d.data[i][1]);
-            //myData.push(d.data[i][0], d.data[i][1]);
-
-            myData.push(d.data[i][1]);
-            dates.push(d.data[i][0]);
+            money.push(d.data[i][1]);
+            dates.push(new Date(d.data[i][0]));
           }
 
-          console.log(myData);
-    */
-
-      for(var i = 0; i < 50; i++){
-        myData.push(Math.random() * 30);
-      }
-
+      //console.log(money);
+      //console.log(dates);
 
       yScale = d3.scaleLinear()
-        .domain([0, d3.max(myData)])
-      /*  .domain(d3.extent(myData, function(d){
-          return d['1'];
-        }))
-      */
+        .domain([0, d3.max(money)])
         .range([0, height]);
 
+      // Used for Y axis guide
       yAxisValues = d3.scaleLinear()
-        .domain([0, d3.max(myData)])
+        .domain([0, d3.max(money)])
         .range([height, 0]);
 
       yAxisTicks = d3.axisLeft(yAxisValues)
         .ticks(10)
 
       xScale = d3.scaleBand()
-        .domain(myData)
-      /*  .domain(d3.extent(myData, function(d){
-          return d[0];
-        }))
-      */
+        .domain(money)
         .paddingInner(.2)
         .paddingOuter(.3)
         .range([0, width]);
 
+    // Used for X axis guide
     xAxisValues = d3.scaleTime()
       .domain([dates[0], dates[(dates.length - 1)]])
       .range([0, width])
 
     xAxisTicks = d3.axisBottom(xAxisValues)
-      .ticks(d3.timeDay.every(1))
+      .ticks(d3.timeYear.every(10))
 
       colors = d3.scaleLinear()
-        .domain([0, myData.length * .33,
-                    myData.length * .66,
-                    myData.length
+        .domain([0, money.length * .33,
+                    money.length * .66,
+                    money.length
                     ])
-        .range(['#8e44ad', '#2ecc71', '#3498db', '#d35400'])
+        //.range(['#8e44ad', '#2ecc71', '#3498db', '#d35400']) Rainbow colors
+
 
       myChart =
         d3.select('#chart').append('svg')
@@ -103,11 +90,10 @@
 
           .style('background', '#34495e')
           .selectAll('rect')
-          //.data(myData)
-          .data(myData)
+          .data(money)
           .enter().append('rect')
           // Solid green bars
-          //.style('fill', '#2ecc71')
+          .style('fill', '#2ecc71')
           .attr('fill', function(d, i){
               return colors(i);
             })
@@ -133,10 +119,12 @@
           .style('fill', tempColor)
         });
 
+      // Y axis guide
       yGuide = d3.select('#chart svg').append('g')
         .attr('transform', 'translate(20,0)')
         .call(yAxisTicks)
 
+      // X axis guide
       xGuide = d3.select('#chart svg').append('g')
         .attr('transform', 'translate(20,' + height + ')')
         .call(xAxisTicks)
@@ -156,7 +144,7 @@
 
 
 
-//  });
+  });
 
     </script>
 
