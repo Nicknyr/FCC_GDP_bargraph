@@ -23,7 +23,7 @@
 
       var money = [];
       var dates = []
-      var margin = { top: 0, right: 0, bottom: 30, left: 50 };
+      var margin = { top: 0, right: 0, bottom: 30, left: 40 };
       var height = 500 - margin.top - margin.bottom;
       var width = 1000 - margin.left - margin.right;
 
@@ -36,6 +36,14 @@
       var yAxisTicks;
       var xAxisValues;
       var xAxisTicks;
+
+      d3.select('body')
+        .append('h2')
+        .text('U.S. GDP By Year')
+        .style('text-align', 'center')
+        .style('color', '#2c3e50')
+        .style('margin-top', '-550px')
+
 
        d3.json("data.json").get(function(error, d){
           for (var i = 0; i < d.data.length; i++) {
