@@ -23,9 +23,9 @@
 
       var money = [];
       var dates = []
-      var margin = { top: 0, right: 0, bottom: 30, left: 20 };
+      var margin = { top: 0, right: 0, bottom: 30, left: 50 };
       var height = 500 - margin.top - margin.bottom;
-      var width = 800 - margin.left - margin.right;
+      var width = 1000 - margin.left - margin.right;
 
       var tempColor;
       var yScale;
@@ -43,9 +43,6 @@
             dates.push(new Date(d.data[i][0]));
           }
 
-      //console.log(money);
-      //console.log(dates);
-
       yScale = d3.scaleLinear()
         .domain([0, d3.max(money)])
         .range([0, height]);
@@ -56,7 +53,7 @@
         .range([height, 0]);
 
       yAxisTicks = d3.axisLeft(yAxisValues)
-        .ticks(20)
+        .ticks(10)
 
       xScale = d3.scaleBand()
         .domain(money)
@@ -71,7 +68,7 @@
 
     xAxisTicks = d3.axisBottom(xAxisValues)
       .ticks(d3.timeYear.every(10))
-      //.style('stroke','darkOrange')
+
 
       colors = d3.scaleLinear()
         .domain([0, money.length * .33,
@@ -84,14 +81,14 @@
       .append('div')
       .style('position', 'absolute')
       .style('padding', '0 10px')
-      .style('background', 'grey')
+      .style('background', 'white')
       .style('opacity', 0)
 
       myChart =
         d3.select('#chart').append('svg')
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
-          //.style('background', '#34495e')
+          //.style('background', '#2c3e50')
           .append('g')
           .attr('transform',
                 'translate(' + margin.left + ',' + margin.right + ')')
@@ -123,25 +120,33 @@
           .style('left', (d3.event.pageX - 35) + 'px')
           .style('top', (d3.event.pageY - 30) + 'px')
 
+
         tempColor = this.style.fill;
         d3.select(this)
           .style('fill', '#ecf0f1')
         })
 
       .on('mouseout', function(d){
+        tooltip.transition().duration(500)
+          .style('opacity', 0)
+
         d3.select(this)
           .style('fill', tempColor)
         });
 
       // Y axis guide
       yGuide = d3.select('#chart svg').append('g')
-        .attr('transform', 'translate(20,0)')
+        .attr('transform', 'translate(40,0)')
         .call(yAxisTicks)
+        .style('stroke','#34495e')
+
 
       // X axis guide
       xGuide = d3.select('#chart svg').append('g')
-        .attr('transform', 'translate(20,' + height + ')')
+        .attr('transform', 'translate(40,' + height + ')')
         .call(xAxisTicks)
+        .style('stroke','#34495e')
+
 
       myChart.transition()
         .attr('height', function(d){
