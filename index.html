@@ -22,6 +22,7 @@
     //var url = https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/GDP-data.json;
 
       var myData = [];
+      var dates = []
       var margin = { top: 0, right: 0, bottom: 30, left: 20 };
       var height = 400 - margin.top - margin.bottom;
       var width = 600 - margin.left - margin.right;
@@ -33,11 +34,16 @@
       var myChart;
       var yAxisValues;
       var yAxisTicks;
+      var xAxisValues;
+      var xAxisTicks;
 
     /*  d3.json("data.json").get(function(error, d){
           for (var i = 0; i < d.data.length; i++) {
             //console.log(d.data[i][0], d.data[i][1]);
-            myData.push(d.data[i][0], d.data[i][1]);
+            //myData.push(d.data[i][0], d.data[i][1]);
+
+            myData.push(d.data[i][1]);
+            dates.push(d.data[i][0]);
           }
 
           console.log(myData);
@@ -72,6 +78,13 @@
         .paddingInner(.2)
         .paddingOuter(.3)
         .range([0, width]);
+
+    xAxisValues = d3.scaleTime()
+      .domain([dates[0], dates[(dates.length - 1)]])
+      .range([0, width])
+
+    xAxisTicks = d3.axisBottom(xAxisValues)
+      .ticks(d3.timeDay.every(1))
 
       colors = d3.scaleLinear()
         .domain([0, myData.length * .33,
@@ -123,6 +136,10 @@
       yGuide = d3.select('#chart svg').append('g')
         .attr('transform', 'translate(20,0)')
         .call(yAxisTicks)
+
+      xGuide = d3.select('#chart svg').append('g')
+        .attr('transform', 'translate(20,' + height + ')')
+        .call(xAxisTicks)
 
       myChart.transition()
         .attr('height', function(d){
