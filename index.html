@@ -24,8 +24,8 @@
       var money = [];
       var dates = []
       var margin = { top: 0, right: 0, bottom: 30, left: 20 };
-      var height = 400 - margin.top - margin.bottom;
-      var width = 600 - margin.left - margin.right;
+      var height = 500 - margin.top - margin.bottom;
+      var width = 800 - margin.left - margin.right;
 
       var tempColor;
       var yScale;
@@ -56,7 +56,7 @@
         .range([height, 0]);
 
       yAxisTicks = d3.axisLeft(yAxisValues)
-        .ticks(10)
+        .ticks(20)
 
       xScale = d3.scaleBand()
         .domain(money)
@@ -71,24 +71,30 @@
 
     xAxisTicks = d3.axisBottom(xAxisValues)
       .ticks(d3.timeYear.every(10))
+      //.style('stroke','darkOrange')
 
       colors = d3.scaleLinear()
         .domain([0, money.length * .33,
                     money.length * .66,
                     money.length
                     ])
-        //.range(['#8e44ad', '#2ecc71', '#3498db', '#d35400']) Rainbow colors
+        //.range(['#8e44ad', '#2ecc71', '#3498db', '#d35400']) //Rainbow colors
 
+    var tooltip = d3.select('body')
+      .append('div')
+      .style('position', 'absolute')
+      .style('padding', '0 10px')
+      .style('background', 'grey')
+      .style('opacity', 0)
 
       myChart =
         d3.select('#chart').append('svg')
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
+          //.style('background', '#34495e')
           .append('g')
           .attr('transform',
                 'translate(' + margin.left + ',' + margin.right + ')')
-
-          .style('background', '#34495e')
           .selectAll('rect')
           .data(money)
           .enter().append('rect')
@@ -109,6 +115,14 @@
 
       // Animation Effects
       .on('mouseover', function(d){
+
+        tooltip.transition().duration(200)
+          .style('opacity', .9)
+
+        tooltip.html(d)
+          .style('left', (d3.event.pageX - 35) + 'px')
+          .style('top', (d3.event.pageY - 30) + 'px')
+
         tempColor = this.style.fill;
         d3.select(this)
           .style('fill', '#ecf0f1')
@@ -140,7 +154,7 @@
           return i * 20;
         })
         .duration(1000)
-        .ease(d3.easeBounceOut)
+      //  .ease(d3.easeBounceOut)
 
 
 
