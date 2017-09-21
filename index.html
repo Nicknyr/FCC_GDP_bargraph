@@ -8,23 +8,21 @@
   <style>
   @import url('https://fonts.googleapis.com/css?family=Oswald:500');
 
+  body {
+    background-color: #ecf0f1;
+  }
+
   #chart {
     text-align: center;
     margin-top: 5em;
-    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, .2);
-    width: 80%;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
   }
-
 
   .title {
     font-family: 'Oswald', sans-serif;
     fill: #666;
     color: '#2c3e50';
     text-align: center;
-    margin-top: -21em;
+    margin-top: -20.5em;
   }
 
   .subtitle {
@@ -47,7 +45,7 @@
 
       var money = [];
       var dates = []
-      var margin = { top: 0, right: 0, bottom: 30, left: 40 };
+      var margin = { top: 0, right: 30, bottom: 60, left: 80 };
       var height = 500 - margin.top - margin.bottom;
       var width = 1000 - margin.left - margin.right;
 
@@ -76,7 +74,7 @@
             dates.push(new Date(d.data[i][0]));
           }
 
-          console.log(dates);
+          //console.log(dates);
 
       yScale = d3.scaleLinear()
         .domain([0, d3.max(money)])
@@ -86,7 +84,7 @@
       // Used for Y axis guide
       yAxisValues = d3.scaleLinear()
         .domain([0, d3.max(money)])
-        .range([height, 0]);
+        .range([height, 40]);
 
       yAxisTicks = d3.axisLeft(yAxisValues)
         .ticks(10)
@@ -125,10 +123,12 @@
         d3.select('#chart').append('svg')
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
-          .style('background', 'snow')
+          .style('background', 'whitesmoke')
+          .style('box-shadow', '2px 2px 2px 1px rgba(0, 0, 0, .5)')
           .append('g')
           .attr('transform',
-                'translate(' + margin.left + ',' + margin.right + ')')
+                //'translate(' + margin.left + ',' + margin.right + ')')
+                'translate(' + margin.left + ',0)')
           .selectAll('rect')
           .data(money)
           .enter().append('rect')
@@ -175,16 +175,17 @@
 
       // Y axis guide
       yGuide = d3.select('#chart svg').append('g')
-        .attr('transform', 'translate(40,0)')
+        //.attr('transform', 'translate(40, 0)')
+        .attr('transform', 'translate(' + margin.left + ', 0)')
         .call(yAxisTicks)
         .style('stroke','#34495e')
 
 
-      // X axis guide
-      xGuide = d3.select('#chart svg').append('g')
-        .attr('transform', 'translate(40,' + height + ')')
-        .call(xAxisTicks)
-        .style('stroke','#34495e')
+        xGuide = d3.select('#chart svg').append('g')
+         //.attr('transform', 'translate(40,' + height + ')')
+         .attr('transform', 'translate(' + margin.left + ', ' + height + ')')
+         .call(xAxisTicks)
+         .style('stroke','#34495e')
 
 
       myChart.transition()
@@ -197,8 +198,8 @@
         .delay(function(d, i){
           return i * 20;
         })
-        .duration(1000)
-      //  .ease(d3.easeBounceOut)
+        .duration(500)
+        //.ease(d3.easeBounceOut)
 
 
 
