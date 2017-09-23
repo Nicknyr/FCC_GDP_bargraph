@@ -4,19 +4,37 @@
     <meta charset="utf-8">
     <title>U.S. GDP By Year</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="https://d3js.org/d3-time.v1.min.js"></script>
+    <!-- Used for formatting time into written month/year format -->
     <script src="https://d3js.org/d3-time-format.v2.min.js"></script>
   </head>
   <style>
   @import url('https://fonts.googleapis.com/css?family=Oswald:500');
+
   body {
-  /*  background-color: #ecf0f1; */
       background-color: #bdc3c7;
   }
+
   #chart {
     text-align: center;
     margin-top: 5em;
   }
+
+  .chart_title {
+    font-size: 3em;
+    text-anchor: middle;
+    fill: black;
+  }
+
+  .bottom_title {
+    font-size: .5em;
+    text-anchor: middle;
+    fill: black;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 36em;
+  }
+
   .title {
     font-family: 'Oswald', sans-serif;
     fill: #666;
@@ -24,6 +42,7 @@
     text-align: center;
     margin-top: -20.5em;
   }
+
   .subtitle {
     text-align: center;
     font-size: 13px;
@@ -32,6 +51,8 @@
     margin-right: auto;
     margin-top: .5em;
   }
+
+
   </style>
   <body>
 
@@ -42,7 +63,7 @@
 
       var money = [];
       var dates = [];
-      var margin = { top: 0, right: 30, bottom: 60, left: 80 };
+      var margin = { top: 0, right: 30, bottom: 90, left: 80 };
       var height = 500 - margin.top - margin.bottom;
       var width = 1000 - margin.left - margin.right;
       var tempColor;
@@ -55,23 +76,43 @@
       var xAxisValues;
       var xAxisTicks;
 
-    var titles = d3.select('body')
-        .append('h2')
-        .attr("class", "title")
-        .attr("x", (width / 2))
-        .attr("y", 0 - (margin.top / 2))
-        .attr("text-anchor", "middle")
-        .text('U.S. GDP By Year')
-          .append('h5')
-          .attr("class", "subtitle")
-          .text('In thousands of billions of dollars')
+
+  /*  svg.append('text')
+      .attr('x', width/2)
+      .attr('y', 0 - (margin.top / 2))
+      .attr('class', 'chart_title')
+      .text("Hey");
+      //.text(data.name.split(',')[0]); */
+
+
 
        d3.json("data.json").get(function(error, d){
           for (var i = 0; i < d.data.length; i++) {
             money.push(d.data[i][1]);
             dates.push(new Date(d.data[i][0]));
-            //dates.push(d.data[i][0]);
+
           }
+
+      var titles = d3.select('body')
+              .append('h2')
+              .attr("class", "title")
+              .attr("x", (width / 2))
+              .attr("y", 0 - (margin.top / 2))
+              .attr("text-anchor", "middle")
+                .append('h5')
+                .attr("class", "bottom_title")
+                .text(d.description)
+
+      var titles = d3.select('body')
+                .append('h2')
+                .attr("class", "title")
+                .attr("x", (width / 2))
+                .attr("y", 0 - (margin.top / 2))
+                .attr("text-anchor", "middle")
+                .append('h5')
+                .attr("class", "title")
+                .text("U.S. GDP By Year")
+
 
 
       yScale = d3.scaleLinear()
@@ -122,7 +163,6 @@
           .style('box-shadow', '2px 2px 2px 1px rgba(0, 0, 0, .5)')
           .append('g')
           .attr('transform',
-                //'translate(' + margin.left + ',' + margin.right + ')')
                 'translate(' + margin.left + ',0)')
           .selectAll('rect')
           .data(money)
@@ -141,20 +181,18 @@
             })
           .attr('y', height)
 
-  /* Display's time in written Month/Day format
-    var formatMonth = d3.timeFormat("%B"),
-    formatDay = d3.timeFormat("%A"),
-    date = new Date(2014, 4, 1);
-  */
+
+
 
 
       // Animation Effects
       .on('mouseover', function(d, i){
-        var formatMonth = d3.timeFormat("%B"),
-        formatYear = d3.timeFormat("%Y");
-        date = dates[i];
-
-        var displayDate = formatMonth(dates[i]) + ' ' + formatYear(dates[i]);
+          // Formats dates in written Month/Year format
+          var formatMonth = d3.timeFormat("%B"),
+          formatYear = d3.timeFormat("%Y");
+          date = dates[i];
+          // Concatenate Month/Year for display
+          var displayDate = formatMonth(dates[i]) + ' ' + formatYear(dates[i]);
 
           tooltip.transition().duration(200)
             .style('opacity', .9)
@@ -164,12 +202,14 @@
           tooltip.html(d)
             .style('left', (d3.event.pageX - 35) + 'px')
             .style('top', (d3.event.pageY - 90) + 'px')
-            .html('<strong>$' + d + ' billion' + '<br/>' + displayDate + '</strong>')
+            .html('<strong>$' + d + ' Billion' + '<br/>' + displayDate + '</strong>')
 
           tempColor = this.style.fill;
           d3.select(this)
             .style('fill', '#ecf0f1')
         })
+
+
 
       .on('mouseout', function(d){
         tooltip.transition().duration(500)
@@ -203,6 +243,7 @@
         })
         .duration(10)
         //.ease(d3.easeBounceOut)
+
 
   });
 
