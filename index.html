@@ -141,8 +141,20 @@
             })
           .attr('y', height)
 
+  /* Display's time in written Month/Day format
+    var formatMonth = d3.timeFormat("%B"),
+    formatDay = d3.timeFormat("%A"),
+    date = new Date(2014, 4, 1);
+  */
+
+
       // Animation Effects
       .on('mouseover', function(d, i){
+        var formatMonth = d3.timeFormat("%B"),
+        formatYear = d3.timeFormat("%Y");
+        date = dates[i];
+
+        var displayDate = formatMonth(dates[i]) + ' ' + formatYear(dates[i]);
 
           tooltip.transition().duration(200)
             .style('opacity', .9)
@@ -152,7 +164,7 @@
           tooltip.html(d)
             .style('left', (d3.event.pageX - 35) + 'px')
             .style('top', (d3.event.pageY - 90) + 'px')
-            .html('<strong>$' + d + ' billion' + '<br/>' + dates[i] + '</strong>')
+            .html('<strong>$' + d + ' billion' + '<br/>' + displayDate + '</strong>')
 
           tempColor = this.style.fill;
           d3.select(this)
@@ -178,6 +190,7 @@
          .attr('transform', 'translate(' + margin.left + ', ' + height + ')')
          .call(xAxisTicks)
          .style('stroke','#34495e')
+
       myChart.transition()
         .attr('height', function(d){
           return yScale(d);
@@ -190,7 +203,10 @@
         })
         .duration(10)
         //.ease(d3.easeBounceOut)
+
   });
+
+
     </script>
 
   </body>
